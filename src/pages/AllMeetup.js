@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MeetupList from '../components/meetups/MeetupList';
 
 const DUMMY_DATA = [
@@ -26,19 +26,32 @@ function AllMeetupPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadedMeetups, setLoadedMeetups] = useState([]);
 
-  //fetching meetup Data from Google Firebase server.
-  fetch(
-    'https://udemy-nextjs-course-react-app2-default-rtdb.firebaseio.com/meetups.json'
-    //default setting of fetch is 'GET'. so second argument is not needed.
-  )
-    .then((response) => {
-      console.log('fetched' + response);
-      return response.json();
-    })
-    .then((data) => {
-      setIsLoading(false);
-      setLoadedMeetups(data);
-    });
+  useEffect(() => {
+    setIsLoading(true);
+    //fetching meetup Data from Google Firebase server.
+    fetch(
+      'https://udemy-nextjs-course-react-app2-default-rtdb.firebaseio.com/meetups.json'
+      //default setting of fetch is 'GET'. so second argument is not needed.
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const meetups = [];
+
+        for (const key in data) {
+          const meetup = {
+            id: key,
+            ...data[key],
+          };
+
+          meetups.push(meetup);
+        }
+
+        setIsLoading(false);
+        setLoadedMeetups(meetups);
+      });
+  }, []);
 
   if (isLoading === true) {
     return (
