@@ -5,6 +5,7 @@ function NewMeetupPage() {
   const history = useHistory();
 
   function addMeetupHandler(meetUpData) {
+    //sending user typed meetup informations to Google Firebase server.
     fetch(
       'https://udemy-nextjs-course-react-app2-default-rtdb.firebaseio.com/meetups.json',
       {
@@ -15,6 +16,7 @@ function NewMeetupPage() {
         },
       }
     ).then(() => {
+      //redirect page to main page after submit new meetup form.
       history.replace('/');
     });
   }
